@@ -11,3 +11,6 @@ try:
 except ValueError:
     print("n and s must be numbers")
 
+if(n<0 or s<0):
+    print("n or s cannot be less that 0")
+    sys.exit()
