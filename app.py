@@ -1,4 +1,5 @@
 import sys 
+from pathlib import Path
 
 # this block checks passed arguements  
 if len(sys.argv)!=3:
@@ -14,3 +15,11 @@ except ValueError:
 if(n<0 or s<0):
     print("n or s cannot be less that 0")
     sys.exit()
+
+buckets_dir = Path("buckets")
+buckets_dir.mkdir(parents=True, exist_ok=True)
+
+for i in range(1,1+n):
+    bucket_path = buckets_dir / f"{i}.txt"
+    with open(bucket_path, "w") as file:
+        file.write(f"")
