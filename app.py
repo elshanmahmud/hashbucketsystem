@@ -46,7 +46,7 @@ def get_inputs():
             word = input("Please enter the string: ")
             hashed = mmh3.hash(word)
             target_file = "buckets/"+str((hashed % n)+1)+".txt"
-            print(word + " "+ str(hashed)+ " "+target_file)
+            print(word + " added to "+target_file)
             save_word_into_bucket(word,target_file)
         except KeyboardInterrupt:
             print("\nSee you again")
