@@ -30,24 +30,36 @@ def create_bucket_files():
         with open(bucket_path, "w") as file:
             file.write(f"")
 
+
+def mark_full(target_file:str):
+    ...
+
+def isFull(target_file:str):
+    ...
+
 def save_word_into_bucket(word:str,target_file:str):
     bucket_file = Path(target_file)
+    content = bucket_file.read_text(encoding="utf-8")
+    if(len(content)+len(word)>s):
+        ...
 
     with bucket_file.open("a", encoding="utf-8") as f:
         f.write(word)
     content = bucket_file.read_text(encoding="utf-8")
-    bucket_len = len(content)
-    print(bucket_len)
+    
 
 def get_inputs():
     global n,s
     while(True):
         try:
             word = input("Please enter the string: ")
-            hashed = mmh3.hash(word)
-            target_file = "buckets/"+str((hashed % n)+1)+".txt"
-            print(word + " added to "+target_file)
-            save_word_into_bucket(word,target_file)
+            if len(word) > s:
+                print("The word you enter cannot be bigger than than the bucket size")
+            else:
+                hashed = mmh3.hash(word)
+                target_file = "buckets/"+str((hashed % n)+1)+".txt"
+                print(word + " added to "+target_file)
+                save_word_into_bucket(word,target_file)
         except KeyboardInterrupt:
             print("\nSee you again")
             break
