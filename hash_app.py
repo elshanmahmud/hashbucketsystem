@@ -16,9 +16,9 @@ def checkargs():
         s = int(sys.argv[2])
     except ValueError:
         print("n and s must be numbers")
-
-    if(n<0 or s<0):
-        print("n or s cannot be less that 0")
+        sys.exit()
+    if n <= 0 or s < 0:
+        print("n must be greater than 0 and s cannot be less than 0")
         sys.exit()
 
 def create_bucket_files():
@@ -51,16 +51,26 @@ def create_overflow(target_file: str, index: int) -> str:
         overflow_path.write_text("", encoding="utf-8")
     return str(overflow_path)
 
-def save_word_into_bucket(word:str,target_file:str):
-    bucket_file = Path(target_file)
-    content = bucket_file.read_text(encoding="utf-8")
-    # not ready yet
-    if(len(content)+len(word)>s):
-        ...
-    with bucket_file.open("a", encoding="utf-8") as f:
-        f.write(word)
-    content = bucket_file.read_text(encoding="utf-8")
-    
+
+def save_word_into_bucket(word: str, target_file: str):
+    idx = 1
+    current_file = target_file
+
+    while is_full(current_file, len(word)):
+        mark_full(current_file)
+        current_file = create_overflow(target_file, idx)
+        idx += 1
+
+    bucket_file = Path(current_file)
+    content = bucket_file.read_text(encoding="utf-8").rstrip("+")
+    updated = content + word
+    bucket_file.write_text(updated, encoding="utf-8")
+
+    if len(updated) == s:
+        mark_full(current_file)
+
+    print(f"{word} added to {current_file}")
+
 
 def get_inputs():
     global n,s
@@ -72,7 +82,6 @@ def get_inputs():
             else:
                 hashed = mmh3.hash(word)
                 target_file = "buckets/"+str((hashed % n)+1)+".txt"
-                print(word + " added to "+target_file)
                 save_word_into_bucket(word,target_file)
         except KeyboardInterrupt:
             print("\nSee you again")
